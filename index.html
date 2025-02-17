@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Routines</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        table { width: 80%; margin: auto; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+
+    <h2>Workout Routines</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Goal</th>
+                <th>Days Per Week</th>
+                <th>Experience</th>
+                <th>Type</th>
+                <th>Routine</th>
+            </tr>
+        </thead>
+        <tbody id="workoutTable"></tbody>
+    </table>
+
+    <script>
+        fetch("https://script.google.com/macros/s/AKfycbw5HJ1LGOif-ZW2gZnsTs6023hPnuWSuuIE1n4_wU7Eizi0DAaan94UeCVmEnLpHpUcDw/exec")
+        .then(response => response.json())
+        .then(data => {
+            let table = document.getElementById("workoutTable");
+            data.forEach(row => {
+                let tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${row.Goal}</td>
+                    <td>${row["Days Per Week"]}</td>
+                    <td>${row["Experience Level"]}</td>
+                    <td>${row["Workout Type"]}</td>
+                    <td>${row.Routine}</td>
+                `;
+                table.appendChild(tr);
+            });
+        })
+        .catch(error => console.log("Error fetching data: ", error));
+    </script>
+
+</body>
+</html>
