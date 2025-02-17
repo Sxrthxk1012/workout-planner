@@ -3,47 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workout Routines</title>
+    <title>Workout Preferences</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
-        table { width: 80%; margin: auto; border-collapse: collapse; }
-        th, td { padding: 10px; border: 1px solid #ddd; }
+        form { max-width: 400px; margin: auto; }
+        input, select, button { width: 100%; margin: 10px 0; padding: 10px; }
     </style>
 </head>
 <body>
 
-    <h2>Workout Routines</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Goal</th>
-                <th>Days Per Week</th>
-                <th>Experience</th>
-                <th>Type</th>
-                <th>Routine</th>
-            </tr>
-        </thead>
-        <tbody id="workoutTable"></tbody>
-    </table>
+    <h2>Enter Your Workout Preferences</h2>
+    <form id="workoutForm">
+        <input type="text" id="name" placeholder="Your Name" required>
+        <select id="goal">
+            <option value="Muscle Gain">Muscle Gain</option>
+            <option value="Fat Loss">Fat Loss</option>
+            <option value="Athleticism">Athleticism</option>
+            <option value="General Fitness">General Fitness</option>
+        </select>
+        <select id="daysPerWeek">
+            <option value="3">3 Days</option>
+            <option value="4">4 Days</option>
+            <option value="5+">5+ Days</option>
+        </select>
+        <select id="experience">
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+        </select>
+        <select id="workoutType">
+            <option value="Bodyweight">Bodyweight</option>
+            <option value="Gym">Gym</option>
+            <option value="Mix">Mix</option>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+
+    <p id="response"></p>
 
     <script>
-        fetch("https://script.google.com/macros/s/AKfycbw5HJ1LGOif-ZW2gZnsTs6023hPnuWSuuIE1n4_wU7Eizi0DAaan94UeCVmEnLpHpUcDw/exec")
-        .then(response => response.json())
-        .then(data => {
-            let table = document.getElementById("workoutTable");
-            data.forEach(row => {
-                let tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td>${row.Goal}</td>
-                    <td>${row["Days Per Week"]}</td>
-                    <td>${row["Experience Level"]}</td>
-                    <td>${row["Workout Type"]}</td>
-                    <td>${row.Routine}</td>
-                `;
-                table.appendChild(tr);
-            });
-        })
-        .catch(error => console.log("Error fetching data: ", error));
+        document.getElementById("workoutForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            let formData = {
+                name: document.getElementById("name").value,
+                goal: document.getElementById("goal").value,
+                daysPerWeek: document.getElementById("daysPerWeek").value,
+                experience: document.getElementById("experience").value,
+                workoutType: document.getElementById("workoutType").value
+            };
+
+            fetch("https://script.google.com/macros/s/AKfycbwWt_xN2UJoc_4q4TxEfPXLlWlGtlWAljTRBUT-67n8wY082_toswCnjqBnh-N1vUg1Lw/exec", {
+                method: "POST",
+                body: JSON.stringify(formData),
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("response").textContent = "✅ Submitted Successfully!";
+                document.getElementById("workoutForm").reset();
+            })
+            .catch(error => console.log("Error:", error));
+        });
     </script>
 
 </body>
